@@ -18,6 +18,6 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/Mapbox.AspNetCore.csproj
     - name: Build
       run: dotnet build src/Mapbox.AspNetCore.csproj --configuration Release
