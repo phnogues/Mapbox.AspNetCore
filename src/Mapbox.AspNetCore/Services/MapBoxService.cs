@@ -41,6 +41,11 @@ namespace Mapbox.AspNetCore.Services
                 urlQuery += $"&country={parameters.CountryCode}";
             }
 
+            if (parameters.AutoComplete)
+            {
+                urlQuery += "&autocomplete=true";
+            }
+
             if (parameters.Proximity != null && parameters.Proximity.Latitude != 0d && parameters.Proximity.Longitude != 0d)
             {
                 string latitude = parameters.Proximity.Latitude.ToString("0.000", CultureInfo.InvariantCulture);
@@ -61,12 +66,19 @@ namespace Mapbox.AspNetCore.Services
                 using var responseStream = await response.Content.ReadAsStreamAsync();
                 var apiResults = await JsonSerializer.DeserializeAsync<MapboxApiResult>(responseStream);
 
-                if (parameters.MinRelevance != 0d)
+                if (parameters.MinRelevance != 0d && apiResults.features != null)
                 {
                     apiResults.features = apiResults.features.Where(f => f.relevance >= parameters.MinRelevance).ToList();
                 }
 
-                return apiResults.ConvertResults();
+                var results = apiResults.ConvertResults();
+
+                if (!string.IsNullOrEmpty(parameters.PostCodeOnly) && results.Places != null)
+                {
+                    results.Places = results.Places.Where(x => x.City.PostCode == parameters.PostCodeOnly).ToList();
+                }
+
+                return results;
             }
             else
             {

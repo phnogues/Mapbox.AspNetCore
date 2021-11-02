@@ -31,7 +31,8 @@ namespace WebApplication.Pages
                 CountryCode = this.CountryCode,
                 Proximity = new GeoCoordinate(48.858256895096574, 2.2943737309434593),
                 Limit = 10,
-                MinRelevance = this.MinRelevance
+                MinRelevance = this.MinRelevance,
+                AutoComplete = false
             };
 
             MapboxResult = await _mapboxService.GeocodingAsync(parameters);

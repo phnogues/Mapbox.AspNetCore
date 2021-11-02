@@ -1,12 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.2</Version>
+    <Version>0.0.3</Version>
     <Authors>Pierre-Henri Nogues</Authors>
     <Company>PierreHenri.fr</Company>
-    <Description></Description>
+    <Description>Library for interfacing with mapbox api</Description>
     <PackageProjectUrl>https://github.com/phsoftware/Mapbox.AspNetCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/phsoftware/Mapbox.AspNetCore</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
