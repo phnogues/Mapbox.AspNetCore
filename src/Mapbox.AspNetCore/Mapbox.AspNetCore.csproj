@@ -3,13 +3,14 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Authors>Pierre-Henri Nogues</Authors>
     <Company>PierreHenri.fr</Company>
     <Description></Description>
     <PackageProjectUrl>https://github.com/phsoftware/Mapbox.AspNetCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/phsoftware/Mapbox.AspNetCore</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Pack
   </PropertyGroup>
 
   <ItemGroup>
