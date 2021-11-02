@@ -10,7 +10,6 @@
     <PackageProjectUrl>https://github.com/phsoftware/Mapbox.AspNetCore</PackageProjectUrl>
     <RepositoryUrl>https://github.com/phsoftware/Mapbox.AspNetCore</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Pack
   </PropertyGroup>
 
   <ItemGroup>
