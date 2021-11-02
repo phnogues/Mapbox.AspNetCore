@@ -1,0 +1,39 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Mapbox.AspNetCore example</h1>
+    <p>Results for query <b>@Model.Query</b>, country @Model.CountryCode, MinRelevance @Model.MinRelevance</p>
+</div>
+
+@if (Model.MapboxResult != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Place name</th>
+                <th scope="col">Relevance</th>
+                <th scope="col">City (PostCode)</th>
+                <th scope="col">Country</th>
+                <th scope="col">Coordinates</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var place in Model.MapboxResult.Places)
+            {
+            <tr>
+                <td>@place.Name</td>
+                <td>@place.Relevance</td>
+                <td>@place.City.Name (@place.City.PostCode)</td>
+                <td>@place.Country.Name</td>
+                <td>@place.Coordinates.Latitude, @place.Coordinates.Longitude</td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+}
