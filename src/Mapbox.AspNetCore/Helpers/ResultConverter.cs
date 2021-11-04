@@ -22,7 +22,7 @@ namespace Mapbox.AspNetCore.Helpers
                     Name = place.place_name,
                     Text = place.text,
                     Relevance = place.relevance,
-                    Coordinates = new GeoCoordinate(place.center[0], place.center[1])
+                    Coordinates = new GeoCoordinate(place.center[1], place.center[0])
                 };
 
                 if (country != null)
