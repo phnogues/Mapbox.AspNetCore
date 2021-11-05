@@ -5,6 +5,7 @@ Library for interfacing with mapbox api
 
 Supported functions :
 - Geocoding
+- ReverseGeocoding
 
 ## Get startred
 Get an API key from mapbox website

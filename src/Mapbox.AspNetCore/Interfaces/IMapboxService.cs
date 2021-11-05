@@ -5,6 +5,7 @@ namespace Mapbox.AspNetCore.Interfaces
 {
     public interface IMapboxService
     {
-        Task<MapboxResult> GeocodingAsync(GeocodingParameters parameters);
+        Task<MapboxResults> GeocodingAsync(GeocodingParameters parameters);
+        Task<MapboxResult> ReverseGeocodingAsync(ReverseGeocodingParameters parameters);
     }
 }

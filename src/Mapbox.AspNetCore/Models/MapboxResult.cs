@@ -4,7 +4,12 @@ namespace Mapbox.AspNetCore.Models
 {
     public class MapboxResult
     {
-        public MapboxResult()
+        public Place Place { get; set; }
+    }
+
+    public class MapboxResults
+    {
+        public MapboxResults()
         {
             Places = new List<Place>();
         }

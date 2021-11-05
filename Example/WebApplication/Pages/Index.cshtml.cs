@@ -17,11 +17,14 @@ namespace WebApplication.Pages
             _mapboxService = mapboxService;
         }
 
-        public MapboxResult MapboxResult { get; set; }
+        public MapboxResults GeocondingResults { get; set; }
+        public MapboxResult ReverseGeocondingResult { get; set; }
 
         public string Query { get; set; } = "Avenue Anatole France, Paris";
         public string CountryCode { get; set; } = "FR";
         public double MinRelevance { get; set; } = 0.6;
+
+        public GeoCoordinate Coordinates { get; set; } = new GeoCoordinate(48.858256895096574, 2.2943737309434593);
 
         public async Task OnGet()
         {
@@ -29,13 +32,20 @@ namespace WebApplication.Pages
             {
                 Query = this.Query,
                 CountryCode = this.CountryCode,
-                Proximity = new GeoCoordinate(48.858256895096574, 2.2943737309434593),
+                Proximity = Coordinates,
                 Limit = 10,
                 MinRelevance = this.MinRelevance,
                 AutoComplete = false
             };
 
-            MapboxResult = await _mapboxService.GeocodingAsync(parameters);
+            GeocondingResults = await _mapboxService.GeocodingAsync(parameters);
+
+            var reverseParameters = new ReverseGeocodingParameters()
+            {
+                Coordinates = Coordinates,
+            };
+
+            ReverseGeocondingResult = await _mapboxService.ReverseGeocodingAsync(reverseParameters);
         }
     }
 }

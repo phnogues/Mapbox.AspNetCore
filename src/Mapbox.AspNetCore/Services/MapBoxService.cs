@@ -22,7 +22,7 @@ namespace Mapbox.AspNetCore.Services
             this.httpClient = httpClient;
         }
 
-        public async Task<MapboxResult> GeocodingAsync(GeocodingParameters parameters)
+        public async Task<MapboxResults> GeocodingAsync(GeocodingParameters parameters)
         {
             string apiKey = mapboxKeyService.ApiKey();
 
@@ -63,8 +63,8 @@ namespace Mapbox.AspNetCore.Services
 
             if (response.IsSuccessStatusCode)
             {
-                using var responseStream = await response.Content.ReadAsStreamAsync();
-                var apiResults = await JsonSerializer.DeserializeAsync<MapboxApiResult>(responseStream);
+                var responseJson = await response.Content.ReadAsStringAsync();
+                var apiResults = JsonSerializer.Deserialize<MapboxApiResult>(responseJson);
 
                 if (parameters.MinRelevance != 0d && apiResults.features != null)
                 {
@@ -79,6 +79,42 @@ namespace Mapbox.AspNetCore.Services
                 }
 
                 return results;
+            }
+            else
+            {
+                throw new Exception(response.ReasonPhrase);
+            }
+        }
+
+        public async Task<MapboxResult> ReverseGeocodingAsync(ReverseGeocodingParameters parameters)
+        {
+            string apiKey = mapboxKeyService.ApiKey();
+
+            string urlQuery = Constants.URL_GEOCODING_API + "mapbox.places/";
+            if (parameters.Coordinates != null && parameters.Coordinates.Latitude != 0d && parameters.Coordinates.Longitude != 0d)
+            {
+                string latitude = parameters.Coordinates.Latitude.ToString("0.000", CultureInfo.InvariantCulture);
+                string longitude = parameters.Coordinates.Longitude.ToString("0.000", CultureInfo.InvariantCulture);
+
+                urlQuery += $"{longitude}%2C{latitude}.json?limit=1";
+            }
+            else
+            {
+                throw new ArgumentException("Coordinates are required");
+            }
+
+            urlQuery += $"&access_token={apiKey}";
+
+            var request = new HttpRequestMessage(HttpMethod.Get, urlQuery);
+            request.Headers.Add("Accept", "application/vnd.github.v3+json");
+
+            var response = await this.httpClient.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync();
+                var apiResults = JsonSerializer.Deserialize<MapboxApiResult>(responseString).ConvertResults();
+                return new MapboxResult() { Place = apiResults.Places.FirstOrDefault() };
             }
             else
             {

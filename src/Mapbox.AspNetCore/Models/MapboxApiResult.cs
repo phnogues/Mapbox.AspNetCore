@@ -35,12 +35,13 @@ namespace Mapbox.AspNetCore.Models
         public List<Context> context { get; set; }
         public string matching_text { get; set; }
         public string matching_place_name { get; set; }
+        public string address { get; set; }
     }
 
     public class MapboxApiResult
     {
         public string type { get; set; }
-        public List<string> query { get; set; }
+        public List<object> query { get; set; }
         public List<Feature> features { get; set; }
         public string attribution { get; set; }
     }

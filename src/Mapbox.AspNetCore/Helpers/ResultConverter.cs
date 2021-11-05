@@ -5,9 +5,9 @@ namespace Mapbox.AspNetCore.Helpers
 {
     public static class ResultConverter
     {
-        public static MapboxResult ConvertResults(this MapboxApiResult apiResults)
+        public static MapboxResults ConvertResults(this MapboxApiResult apiResults)
         {
-            MapboxResult result = new MapboxResult();
+            MapboxResults result = new MapboxResults();
 
             foreach (var place in apiResults.features)
             {
