@@ -1,4 +1,6 @@
 # Mapbox.AspNetCore
+<img src="/icon.png" width="100" height="100" />
+
 [![.NET](https://github.com/phsoftware/Mapbox.AspNetCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/phsoftware/Mapbox.AspNetCore/actions/workflows/dotnet.yml)
 
 Library for interfacing with mapbox api
