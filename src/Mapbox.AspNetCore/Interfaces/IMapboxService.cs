@@ -1,11 +1,10 @@
-﻿using Mapbox.AspNetCore.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace Mapbox.AspNetCore.Interfaces
+namespace Mapbox.AspNetCore.Interfaces;
+
+public interface IMapboxService
 {
-    public interface IMapboxService
-    {
-        Task<MapboxResults> GeocodingAsync(GeocodingParameters parameters);
-        Task<MapboxResult> ReverseGeocodingAsync(ReverseGeocodingParameters parameters);
-    }
+    Task<MapboxResults> GeocodingAsync(GeocodingParameters parameters);
+
+    Task<MapboxResult> ReverseGeocodingAsync(ReverseGeocodingParameters parameters);
 }

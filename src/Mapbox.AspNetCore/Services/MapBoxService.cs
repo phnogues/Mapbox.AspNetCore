@@ -1,7 +1,4 @@
 ﻿using Mapbox.AspNetCore.Helpers;
-using Mapbox.AspNetCore.Interfaces;
-using Mapbox.AspNetCore.Models;
-using System;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -9,117 +6,128 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace Mapbox.AspNetCore.Services
+namespace Mapbox.AspNetCore.Services;
+
+public class MapBoxService : IMapboxService
 {
-    public class MapBoxService : IMapboxService
+    private readonly IMapboxKeyService mapboxKeyService;
+    private readonly HttpClient httpClient;
+
+    public MapBoxService(HttpClient httpClient, IMapboxKeyService mapboxKeyService)
     {
-        private readonly IMapboxKeyService mapboxKeyService;
-        private readonly HttpClient httpClient;
+        this.mapboxKeyService = mapboxKeyService;
+        this.httpClient = httpClient;
+    }
 
-        public MapBoxService(HttpClient httpClient, IMapboxKeyService mapboxKeyService)
+    public async Task<MapboxResults> GeocodingAsync(GeocodingParameters parameters)
+    {
+        string apiKey = mapboxKeyService.ApiKey();
+
+        if (string.IsNullOrEmpty(parameters.Query))
         {
-            this.mapboxKeyService = mapboxKeyService;
-            this.httpClient = httpClient;
+            throw new ArgumentException("Query is required");
         }
 
-        public async Task<MapboxResults> GeocodingAsync(GeocodingParameters parameters)
+        string urlQuery = Constants.URL_GEOCODING_API + "mapbox.places/";
+
+        urlQuery += $"{HttpUtility.UrlEncode(parameters.Query)}.json";
+        urlQuery += $"?limit={parameters.Limit}";
+
+        if (!string.IsNullOrEmpty(parameters.CountryCode))
         {
-            string apiKey = mapboxKeyService.ApiKey();
+            urlQuery += $"&country={parameters.CountryCode}";
+        }
 
-            if (string.IsNullOrEmpty(parameters.Query))
+        if (parameters.AutoComplete)
+        {
+            urlQuery += "&autocomplete=true";
+        }
+
+        if (parameters.Proximity != null)
+        {
+            if (parameters.Proximity is ProximityIp)
             {
-                throw new ArgumentException("Query is required");
+                urlQuery += $"&proximity=ip";
             }
 
-            string urlQuery = Constants.URL_GEOCODING_API + "mapbox.places/";
-
-            urlQuery += $"{HttpUtility.UrlEncode(parameters.Query)}.json";
-            urlQuery += $"?limit={parameters.Limit}";
-
-            if (!string.IsNullOrEmpty(parameters.CountryCode))
+            if (parameters.Proximity is ProximityCoordinates)
             {
-                urlQuery += $"&country={parameters.CountryCode}";
-            }
-
-            if (parameters.AutoComplete)
-            {
-                urlQuery += "&autocomplete=true";
-            }
-
-            if (parameters.Proximity != null && parameters.Proximity.Latitude != 0d && parameters.Proximity.Longitude != 0d)
-            {
-                string latitude = parameters.Proximity.Latitude.ToString("0.000", CultureInfo.InvariantCulture);
-                string longitude = parameters.Proximity.Longitude.ToString("0.000", CultureInfo.InvariantCulture);
-
-                urlQuery += $"&proximity={longitude}%2C{latitude}";
-            }
-
-            urlQuery += $"&access_token={apiKey}";
-
-            var request = new HttpRequestMessage(HttpMethod.Get, urlQuery);
-            request.Headers.Add("Accept", "application/vnd.github.v3+json");
-
-            var response = await this.httpClient.SendAsync(request);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var responseJson = await response.Content.ReadAsStringAsync();
-                var apiResults = JsonSerializer.Deserialize<MapboxApiResult>(responseJson);
-
-                if (parameters.MinRelevance != 0d && apiResults.features != null)
+                var coordinates = ((ProximityCoordinates)parameters.Proximity).Coordinates;
+                if (coordinates.Latitude != 0d && coordinates.Longitude != 0d)
                 {
-                    apiResults.features = apiResults.features.Where(f => f.relevance >= parameters.MinRelevance).ToList();
+                    string latitude = coordinates.Latitude.ToString("0.000", CultureInfo.InvariantCulture);
+                    string longitude = coordinates.Longitude.ToString("0.000", CultureInfo.InvariantCulture);
+
+                    urlQuery += $"&proximity={longitude}%2C{latitude}";
                 }
-
-                var results = apiResults.ConvertResults();
-
-                if (!string.IsNullOrEmpty(parameters.PostCodeOnly) && results.Places != null)
-                {
-                    results.Places = results.Places.Where(x => x.City.PostCode == parameters.PostCodeOnly).ToList();
-                }
-
-                return results;
-            }
-            else
-            {
-                throw new Exception(response.ReasonPhrase);
             }
         }
 
-        public async Task<MapboxResult> ReverseGeocodingAsync(ReverseGeocodingParameters parameters)
+        urlQuery += $"&access_token={apiKey}";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, urlQuery);
+        request.Headers.Add("Accept", "application/vnd.github.v3+json");
+
+        var response = await this.httpClient.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
         {
-            string apiKey = mapboxKeyService.ApiKey();
+            var responseJson = await response.Content.ReadAsStringAsync();
+            var apiResults = JsonSerializer.Deserialize<MapboxApiResult>(responseJson);
 
-            string urlQuery = Constants.URL_GEOCODING_API + "mapbox.places/";
-            if (parameters.Coordinates != null && parameters.Coordinates.Latitude != 0d && parameters.Coordinates.Longitude != 0d)
+            if (parameters.MinRelevance != 0d && apiResults.features != null)
             {
-                string latitude = parameters.Coordinates.Latitude.ToString("0.000", CultureInfo.InvariantCulture);
-                string longitude = parameters.Coordinates.Longitude.ToString("0.000", CultureInfo.InvariantCulture);
-
-                urlQuery += $"{longitude}%2C{latitude}.json?limit=1";
-            }
-            else
-            {
-                throw new ArgumentException("Coordinates are required");
+                apiResults.features = apiResults.features.Where(f => f.relevance >= parameters.MinRelevance).ToList();
             }
 
-            urlQuery += $"&access_token={apiKey}";
+            var results = apiResults.ConvertResults();
 
-            var request = new HttpRequestMessage(HttpMethod.Get, urlQuery);
-            request.Headers.Add("Accept", "application/vnd.github.v3+json");
-
-            var response = await this.httpClient.SendAsync(request);
-
-            if (response.IsSuccessStatusCode)
+            if (!string.IsNullOrEmpty(parameters.PostCodeOnly) && results.Places != null)
             {
-                var responseString = await response.Content.ReadAsStringAsync();
-                var apiResults = JsonSerializer.Deserialize<MapboxApiResult>(responseString).ConvertResults();
-                return new MapboxResult() { Place = apiResults.Places.FirstOrDefault() };
+                results.Places = results.Places.Where(x => x.City.PostCode == parameters.PostCodeOnly).ToList();
             }
-            else
-            {
-                throw new Exception(response.ReasonPhrase);
-            }
+
+            return results;
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
+        }
+    }
+
+    public async Task<MapboxResult> ReverseGeocodingAsync(ReverseGeocodingParameters parameters)
+    {
+        string apiKey = mapboxKeyService.ApiKey();
+
+        string urlQuery = Constants.URL_GEOCODING_API + "mapbox.places/";
+        if (parameters.Coordinates != null && parameters.Coordinates.Latitude != 0d && parameters.Coordinates.Longitude != 0d)
+        {
+            string latitude = parameters.Coordinates.Latitude.ToString("0.000", CultureInfo.InvariantCulture);
+            string longitude = parameters.Coordinates.Longitude.ToString("0.000", CultureInfo.InvariantCulture);
+
+            urlQuery += $"{longitude}%2C{latitude}.json?limit=1";
+        }
+        else
+        {
+            throw new ArgumentException("Coordinates are required");
+        }
+
+        urlQuery += $"&access_token={apiKey}";
+
+        var request = new HttpRequestMessage(HttpMethod.Get, urlQuery);
+        request.Headers.Add("Accept", "application/vnd.github.v3+json");
+
+        var response = await this.httpClient.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var responseString = await response.Content.ReadAsStringAsync();
+            var apiResults = JsonSerializer.Deserialize<MapboxApiResult>(responseString).ConvertResults();
+            return new MapboxResult() { Place = apiResults.Places.FirstOrDefault() };
+        }
+        else
+        {
+            throw new Exception(response.ReasonPhrase);
         }
     }
 }

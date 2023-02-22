@@ -1,7 +1,6 @@
-﻿namespace Mapbox.AspNetCore.Interfaces
+﻿namespace Mapbox.AspNetCore.Interfaces;
+
+public interface IMapboxKeyService
 {
-    public interface IMapboxKeyService
-    {
-        string ApiKey();
-    }
+    string ApiKey();
 }

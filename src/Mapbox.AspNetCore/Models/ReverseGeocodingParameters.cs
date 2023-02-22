@@ -1,7 +1,6 @@
-﻿namespace Mapbox.AspNetCore.Models
+﻿namespace Mapbox.AspNetCore.Models;
+
+public class ReverseGeocodingParameters
 {
-    public class ReverseGeocodingParameters
-    {
-        public GeoCoordinate Coordinates { get; set; }
-    }
+    public GeoCoordinate Coordinates { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Mapbox.AspNetCore.Interfaces;
 using Mapbox.AspNetCore.Models;
+using Mapbox.AspNetCore.Models.Proximity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -32,8 +33,9 @@ namespace WebApplication.Pages
             {
                 Query = this.Query,
                 CountryCode = this.CountryCode,
-                Proximity = Coordinates,
-                Limit = 10,
+                Proximity = new ProximityIp(),
+                IpProximity = true,
+                Limit = 100,
                 MinRelevance = this.MinRelevance,
                 AutoComplete = false
             };

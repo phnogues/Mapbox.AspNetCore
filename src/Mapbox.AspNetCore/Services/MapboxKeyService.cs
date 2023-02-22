@@ -1,19 +1,16 @@
-﻿using Mapbox.AspNetCore.Interfaces;
+﻿namespace Mapbox.AspNetCore.Services;
 
-namespace Mapbox.AspNetCore.Services
+public class MapboxKeyService : IMapboxKeyService
 {
-    public class MapboxKeyService : IMapboxKeyService
+    private readonly string _apiKey;
+
+    public MapboxKeyService(string apiKey)
     {
-        private readonly string _apiKey;
+        this._apiKey = apiKey;
+    }
 
-        public MapboxKeyService(string apiKey)
-        {
-            this._apiKey = apiKey;
-        }
-
-        public string ApiKey()
-        {
-            return _apiKey;
-        }
+    public string ApiKey()
+    {
+        return _apiKey;
     }
 }
