@@ -14,3 +14,8 @@ Open your statup.cs, and use that code :
 ##### services.AddMapBoxServices(options=> options.UseApiKey(Configuration["MapboxApiKey"]));
 
 Check the example project
+
+## Release Note 
+0.2.0
+- upgrade to .Net 7
+- add proximity support
