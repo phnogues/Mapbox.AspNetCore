@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net7.0</TargetFramework>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Version>0.2.0.1</Version>
+		<Version>0.2.0.2</Version>
 		<Authors>Pierre-Henri Nogues</Authors>
 		<Company>PierreHenri.fr</Company>
 		<Description>Library for interfacing with mapbox api</Description>

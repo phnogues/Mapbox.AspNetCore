@@ -17,5 +17,4 @@ public class GeocodingParameters
     /// Only returns cities with this postal code.
     /// </summary>
     public string PostCodeOnly { get; set; }
-    public bool IpProximity { get; set; }
 }

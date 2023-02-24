@@ -34,7 +34,6 @@ namespace WebApplication.Pages
                 Query = this.Query,
                 CountryCode = this.CountryCode,
                 Proximity = new ProximityIp(),
-                IpProximity = true,
                 Limit = 100,
                 MinRelevance = this.MinRelevance,
                 AutoComplete = false

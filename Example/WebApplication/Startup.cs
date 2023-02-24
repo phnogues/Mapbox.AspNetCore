@@ -19,7 +19,7 @@ namespace WebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMapBoxServices(options=> options.UseApiKey(Configuration["MapboxApiKey"]));
+            services.AddMapBoxServices(options => options.UseApiKey(Configuration["MapboxApiKey"]));
             services.AddRazorPages();
         }
 
