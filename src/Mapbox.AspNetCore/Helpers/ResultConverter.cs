@@ -42,13 +42,19 @@ public static class ResultConverter
                 };
             }
 
-            if (city != null && postCode != null)
+            if (city != null)
             {
                 newPlace.City = new City()
                 {
                     Name = city.text,
-                    PostCode = postCode.text
+                    PostCode = postCode?.text
                 };
+
+                if (postCode is null)
+                {
+                    // try to get it from feature
+                    newPlace.City.PostCode = place.place_type?[0] == "postcode" ? place.text : null;
+                }
             }
 
             result.Places.Add(newPlace);
