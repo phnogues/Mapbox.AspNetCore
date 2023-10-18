@@ -30,6 +30,7 @@ public class Feature
     public Properties properties { get; set; }
     public string text { get; set; }
     public string place_name { get; set; }
+    public List<double>? bbox { get; set; }
     public List<double> center { get; set; }
     public Geometry geometry { get; set; }
     public List<Context> context { get; set; }

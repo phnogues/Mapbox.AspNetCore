@@ -21,7 +21,10 @@ public static class ResultConverter
                 Name = place.place_name,
                 Text = place.text,
                 Relevance = place.relevance,
-                Coordinates = new GeoCoordinate(place.center[1], place.center[0])
+                Coordinates = new GeoCoordinate(place.center[1], place.center[0]),
+                BBox = place.bbox != null 
+                    ? new BoundingBox(new(place.bbox[1], place.bbox[0]), new(place.bbox[3], place.bbox[2]))
+                    : null
             };
 
             if (country != null)

@@ -32,6 +32,8 @@ public class Place
     public Region Region { get; set; }
 
     public City City { get; set; }
+    
+    public BoundingBox? BBox { get; set; }
 }
 
 public class Country : ContextBase
@@ -53,4 +55,16 @@ public class ContextBase
 {
     public string ShortCode { get; set; }
     public string Name { get; set; }
+}
+
+public class BoundingBox
+{
+    public BoundingBox(GeoCoordinate southWest, GeoCoordinate northEast)
+    {
+        SouthWest = southWest;
+        NorthEast = northEast;
+    }
+
+    public GeoCoordinate SouthWest { get; set; }
+    public GeoCoordinate NorthEast { get; set; }
 }
