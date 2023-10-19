@@ -2,7 +2,7 @@
 <img src="/icon.png" width="100" height="100" />
 
 [![NuGet latest version](https://badgen.net/nuget/v/Mapbox.AspNetCore/latest)](https://nuget.org/packages/Mapbox.AspNetCore)
-[![.NET](https://github.com/phsoftware/Mapbox.AspNetCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/phsoftware/Mapbox.AspNetCore/actions/workflows/build.yml)
+[![.NET](https://github.com/phsoftware/Mapbox.AspNetCore/actions/workflows/build.yml/badge.svg)](https://github.com/phsoftware/Mapbox.AspNetCore/actions/workflows/build.yml)
 
 Library for interfacing with mapbox api
 
