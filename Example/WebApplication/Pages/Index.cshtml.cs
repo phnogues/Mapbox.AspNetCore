@@ -22,8 +22,12 @@ namespace WebApplication.Pages
         public MapboxResult ReverseGeocondingResult { get; set; }
 
         public string Query { get; set; } = "Avenue Anatole France, Paris";
-        public string CountryCode { get; set; } = "FR";
+
+        public string CountryCode { get; set; } = "fr";
+
         public double MinRelevance { get; set; } = 0.6;
+
+        public string Language { get; set; } = "es";
 
         public GeoCoordinate Coordinates { get; set; } = new GeoCoordinate(48.858256895096574, 2.2943737309434593);
 
@@ -36,7 +40,8 @@ namespace WebApplication.Pages
                 Proximity = new ProximityIp(),
                 Limit = 100,
                 MinRelevance = this.MinRelevance,
-                AutoComplete = false
+                AutoComplete = false,
+                Language = Language,
             };
 
             GeocondingResults = await _mapboxService.GeocodingAsync(parameters);

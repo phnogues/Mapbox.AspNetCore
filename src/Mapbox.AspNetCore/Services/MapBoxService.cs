@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Mapbox.AspNetCore.Helpers;
+﻿using Mapbox.AspNetCore.Helpers;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -39,6 +39,11 @@ public class MapBoxService : IMapboxService
             urlQuery += $"&country={parameters.CountryCode}";
         }
 
+        if (!string.IsNullOrEmpty(parameters.Language))
+        {
+            urlQuery += $"&language={parameters.Language}";
+        }
+
         if (parameters.AutoComplete)
         {
             urlQuery += "&autocomplete=true";
@@ -63,7 +68,7 @@ public class MapBoxService : IMapboxService
                 }
             }
         }
-        
+
         var types = parameters.Types?.Select(x => x.ApiValue()).ToList() ?? new List<string>();
         if (types.Any())
         {
@@ -114,7 +119,7 @@ public class MapBoxService : IMapboxService
             string longitude = parameters.Coordinates.Longitude.ToString("0.000", CultureInfo.InvariantCulture);
 
             urlQuery += $"{longitude}%2C{latitude}.json?limit=1";
-            
+
             var types = parameters.Types?.Select(x => x.ApiValue()).ToList() ?? new List<string>();
             if (types.Any())
             {
