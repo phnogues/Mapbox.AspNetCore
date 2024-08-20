@@ -10,11 +10,11 @@ public static class ResultConverter
 
         foreach (var place in apiResults.features)
         {
-            var country = place.context.FirstOrDefault(p => p.id.StartsWith("country"));
-            var region = place.context.FirstOrDefault(p => p.id.StartsWith("region"));
-            var city = place.context.FirstOrDefault(p => p.id.StartsWith("place"));
-            var postCode = place.context.FirstOrDefault(p => p.id.StartsWith("postcode"));
-            var locality = place.context.FirstOrDefault(p => p.id.StartsWith("locality"));
+            var country = place.context?.FirstOrDefault(p => p.id.StartsWith("country"));
+            var region = place.context?.FirstOrDefault(p => p.id.StartsWith("region"));
+            var city = place.context?.FirstOrDefault(p => p.id.StartsWith("place"));
+            var postCode = place.context?.FirstOrDefault(p => p.id.StartsWith("postcode"));
+            var locality = place.context?.FirstOrDefault(p => p.id.StartsWith("locality"));
 
             var newPlace = new Place()
             {
